@@ -85,10 +85,10 @@ webpackJsonp([0],{
 	var parameters_2 = __webpack_require__(331);
 	var Calc = (function () {
 	    function Calc(http) {
-	        this.title = 'UCRE Capacity Calculator';
+	        this.title = 'Real-time Edge Capacity Calculator';
 	        this.parameters = parameters_1.PARAMETERS;
-	        this.neCUSP = 0;
-	        this.nCUBE = 0;
+	        this.neProxy = 0;
+	        this.nSBC = 0;
 	        this.nCMS = 0;
 	        this.iCPS = 0;
 	        this.eCPS = 0;
@@ -129,8 +129,8 @@ webpackJsonp([0],{
 	        }
 	        this.TahoeCapacity = +parameters_1.PARAMETERS[0].value;
 	        this.holdingTime = +parameters_1.PARAMETERS[1].value;
-	        this.CUBECapacity = +parameters_1.PARAMETERS[2].value;
-	        this.CUSPCapacity = +parameters_1.PARAMETERS[3].value;
+	        this.SBCCapacity = +parameters_1.PARAMETERS[2].value;
+	        this.ProxyCapacity = +parameters_1.PARAMETERS[3].value;
 	        this.redundancy = +parameters_1.PARAMETERS[4].value;
 	        this.concurrentServerLoss = +parameters_1.PARAMETERS[5].value;
 	        this.recoveryRate = +parameters_1.PARAMETERS[6].value;
@@ -172,21 +172,21 @@ webpackJsonp([0],{
 	        if (this.nDSA < 2)
 	            this.nDSA = 2;
 	        //UCRE call routing and SBC layers
-	        this.neCUSP = this.nBoxes(CPS, this.CUSPCapacity, this.loadRate, this.redundancy);
+	        this.neProxy = this.nBoxes(CPS, this.ProxyCapacity, this.loadRate, this.redundancy);
 	        var adjustedCPS = CPS + this.recoveryRate * this.concurrentServerLoss; //if 2 TAS and 1 CMS pop at the same time, we're looking at 600 CPS increase
-	        // Calculate the number of CUBE and iCUSP instances based on peak hour + recovery CPS
-	        this.niCUSP = this.nBoxes(adjustedCPS, this.CUSPCapacity, this.loadRate, this.redundancy);
-	        this.nCUBE = this.nBoxes(adjustedCPS, this.CUBECapacity, this.loadRate, this.redundancy);
-	        // This condition is unlikely to ever be true:  it would mean a very high CPS for CUBE
-	        if (this.maxCC * (this.nCUBE - this.redundancy) < this.TahoeCapacity)
-	            this.nCUBE = Math.ceil(this.TahoeCapacity / this.maxCC) + this.redundancy;
-	        var coresPerCuspVm = 6; //this is a temporary measure to reflect CUSP requiring a different flavor VM.
+	        // Calculate the number of SBC and iProxy instances based on peak hour + recovery CPS
+	        this.niProxy = this.nBoxes(adjustedCPS, this.ProxyCapacity, this.loadRate, this.redundancy);
+	        this.nSBC = this.nBoxes(adjustedCPS, this.SBCCapacity, this.loadRate, this.redundancy);
+	        // This condition is unlikely to ever be true:  it would mean a very high CPS for SBC
+	        if (this.maxCC * (this.nSBC - this.redundancy) < this.TahoeCapacity)
+	            this.nSBC = Math.ceil(this.TahoeCapacity / this.maxCC) + this.redundancy;
+	        var coresPerProxyVm = 6; //this is a temporary measure to reflect Proxy requiring a different flavor VM.
 	        // If more components emerge that deviate from the standard flavor, the UI needs to change to reflect that.
-	        var nCusp = this.neCUSP + this.niCUSP;
-	        this.nVM = this.nCMS * 2 + this.nDSA + this.nCUBE;
-	        this.nVcore = this.vCores * this.nVM + nCusp * coresPerCuspVm;
-	        this.mem = (this.nVM + nCusp) * this.vMem;
-	        this.nVM = this.nVM + nCusp;
+	        var nProxy = this.neProxy + this.niProxy;
+	        this.nVM = this.nCMS * 2 + this.nDSA + this.nSBC;
+	        this.nVcore = this.vCores * this.nVM + nProxy * coresPerProxyVm;
+	        this.mem = (this.nVM + nProxy) * this.vMem;
+	        this.nVM = this.nVM + nProxy;
 	        this.saveDefaults();
 	    };
 	    Calc.prototype.ngOnInit = function () {
@@ -228,7 +228,7 @@ webpackJsonp([0],{
 	    {
 	        "name": "Concurrent Calls", "value": +120000,
 	        "measurement": "[ports]",
-	        "tooltip": "How many total conference ports do we want to serve with this UCRE deployment?",
+	        "tooltip": "How many total conference ports do we want to serve with this edge?",
 	        "min": 1000,
 	        "max": 10000000,
 	        "step": "1000",
@@ -245,18 +245,18 @@ webpackJsonp([0],{
 	        "subs": subSystem.ucre
 	    },
 	    {
-	        "name": "*CUBE Max Call Rate λ", "value": +40,
+	        "name": "SBC Max Call Rate λ", "value": +40,
 	        "measurement": "[CPS]",
-	        "tooltip": "The maximum number of calls per second a CUBE can handle",
+	        "tooltip": "The maximum number of calls per second a SBC can handle",
 	        "min": 1,
 	        "max": 5000,
 	        "step": "1",
 	        "subs": subSystem.ucre
 	    },
 	    {
-	        "name": "*CUSP Max Call Rate λ", "value": +200,
+	        "name": "Proxy Max Call Rate λ", "value": +200,
 	        "measurement": "[CPS]",
-	        "tooltip": "The maximum number of calls per second a CUSP can handle",
+	        "tooltip": "The maximum number of calls per second a proxy can handle",
 	        "min": 1,
 	        "max": 5000,
 	        "step": "1",
@@ -274,14 +274,14 @@ webpackJsonp([0],{
 	    {
 	        "name": "Fault Tolerance", "value": +1,
 	        "measurement": "[servers]",
-	        "tooltip": "How many servers (TAS, CMS, etc. – each in different Tahoe) can a system lose concurrently before the additional CPS the recovery creates overwhelmes UCRE?",
+	        "tooltip": "How many media servers can a system lose concurrently before the additional CPS the recovery creates overwhelmes the edge?",
 	        "min": 0,
 	        "max": 10,
 	        "step": "1",
 	        "subs": subSystem.ucre
 	    },
 	    {
-	        "name": "*Failure Recovery Rate", "value": +200,
+	        "name": "Failure Recovery Rate", "value": +200,
 	        "measurement": "[CPS]",
 	        "tooltip": "At what calls per second rate do services relocate calls from a failed resource to a new one?",
 	        "min": 1,
@@ -299,16 +299,16 @@ webpackJsonp([0],{
 	        "subs": subSystem.ucre
 	    },
 	    {
-	        "name": "*Max Calls per CUBE", "value": +12000,
+	        "name": "Max Calls per SBC", "value": +12000,
 	        "measurement": "",
-	        "tooltip": "What is the maximum number of concurrent calls a CUBE can handle?",
+	        "tooltip": "What is the maximum number of concurrent calls an SBC can handle?",
 	        "min": 1000,
 	        "max": 100000,
 	        "step": "1000",
 	        "subs": subSystem.ucre
 	    },
 	    {
-	        "name": "*Time spent in IVR", "value": +18,
+	        "name": "Time spent in IVR", "value": +18,
 	        "measurement": "[sec]",
 	        "tooltip": "The average time the IVR system is busy per call, including resource allocation/release.",
 	        "min": 5,
@@ -317,18 +317,18 @@ webpackJsonp([0],{
 	        "subs": subSystem.givr
 	    },
 	    {
-	        "name": "*IVR Max Call Rate λ", "value": +25,
+	        "name": "IVR Max Call Rate λ", "value": +25,
 	        "measurement": "[CPS]",
-	        "tooltip": "The maximum number of calls per second an IVR/CMS pair can handle.",
+	        "tooltip": "The maximum number of calls per second an IVR/MS pair can handle.",
 	        "min": 1,
 	        "max": 5000,
 	        "step": "1",
 	        "subs": subSystem.givr
 	    },
 	    {
-	        "name": "*IVR ports per unit", "value": +2000,
+	        "name": "IVR ports per unit", "value": +2000,
 	        "measurement": "",
-	        "tooltip": "The maximum number of ports per CMS server that can be used concurrently for IVR.",
+	        "tooltip": "The maximum number of ports per MS server that can be used concurrently for IVR.",
 	        "min": 1,
 	        "max": 50000,
 	        "step": "100",
@@ -346,7 +346,7 @@ webpackJsonp([0],{
 	    {
 	        "name": "VCores per VM", "value": 4,
 	        "measurement": "",
-	        "tooltip": "Number of virtual CPU cores per VM flavored for voice infrastructure (except CUSP, which is fixed at 6 cores per VM).",
+	        "tooltip": "Number of virtual CPU cores per VM flavored for voice infrastructure (except Proxy, which is fixed at 6 cores per VM).",
 	        "min": 1,
 	        "max": 16,
 	        "step": "1",
