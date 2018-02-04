@@ -1,0 +1,117 @@
+
+<div>
+  <div>
+    <h2>{{title}}</h2>
+    <ul class="parameters">
+      <li *ngFor="let parameter of parameters  | SubsystemPipe: ss.ucre; let e=even"
+          [class.selected]="parameter === selectedParameter"
+          (hover)="onSelect(parameter)">
+        <span [class.e-badge]="e" [class.o-badge]="!e" data-toggle="tooltip" title={{parameter.tooltip}}>{{parameter.name}}</span>
+        <input [(ngModel)]="parameter.value"
+               type="number"
+               min={{parameter.min}}
+               max={{parameter.max}}
+               step={{parameter.step}}
+               placeholder={{parameter.value}}
+               (ngModelChange)="reCalc()"
+        />
+        {{parameter.measurement}}
+      </li>
+    </ul>
+
+    <table class="restab">
+      <tr>
+        <th>eCUSP</th>
+        <th>CUBE</th>
+        <th>iCUSP</th>
+      </tr>
+      <tr>
+        <th><img src="graphics/CUSP.png" alt="CUSP" height="42"></th>
+        <th><img src="graphics/CUBE.png" alt="CUBE" height="42"></th>
+        <th><img src="graphics/CUSP.png" alt="CUSP" height="42"></th>
+      </tr>
+      <tr>
+        <th>{{neCUSP}}</th>
+        <th>{{nCUBE}}</th>
+        <th>{{niCUSP}}</th>
+      </tr>
+    </table>
+
+  </div>
+
+  <div>
+
+    <ul class="parameters">
+      <li *ngFor="let parameter of parameters  | SubsystemPipe: ss.givr; let e=even"
+          [class.selected]="parameter === selectedParameter"
+          (hover)="onSelect(parameter)">
+        <span [class.e-badge]="e" [class.o-badge]="!e" data-toggle="tooltip" title={{parameter.tooltip}}>{{parameter.name}}</span>
+        <input [(ngModel)]="parameter.value"
+               type="number"
+               min={{parameter.min}}
+               max={{parameter.max}}
+               step={{parameter.step}}
+               placeholder={{parameter.value}}
+               (ngModelChange)="reCalc()"
+        />
+        {{parameter.measurement}}
+      </li>
+    </ul>
+
+
+    <table class="restab">
+      <tr>
+        <th>IVR</th>
+        <th>CMS</th>
+        <th>DSA</th>
+      </tr>
+      <tr>
+        <th><img src="graphics/Tahoe.png" alt="IVR" height="42"></th>
+        <th><img src="graphics/service control.jpg" alt="CMS" height="42"></th>
+        <th><img src="graphics/DSA.png" alt="DSA" width="42" height="42"></th>
+      </tr>
+      <tr>
+        <th>{{nCMS}}</th>
+        <th>{{nCMS}}</th>
+        <th>{{nDSA}}</th>
+      </tr>
+    </table>
+
+    <ul class="parameters">
+      <li *ngFor="let parameter of parameters  | SubsystemPipe: ss.vm; let e=even"
+          [class.selected]="parameter === selectedParameter"
+          (hover)="onSelect(parameter)">
+        <span [class.e-badge]="e" [class.o-badge]="!e" data-toggle="tooltip" title={{parameter.tooltip}}>{{parameter.name}}</span>
+        <input [(ngModel)]="parameter.value"
+               type="number"
+               min={{parameter.min}}
+               max={{parameter.max}}
+               step={{parameter.step}}
+               placeholder={{parameter.value}}
+               (ngModelChange)="reCalc()"
+        />
+        {{parameter.measurement}}
+      </li>
+    </ul>
+
+
+    <table class="restab">
+      <tr>
+        <th>VM</th>
+        <th>VCore</th>
+        <th>Memory</th>
+      </tr>
+      <tr>
+        <th><img src="graphics/VM.png" alt="VCore" height="42"></th>
+        <th><img src="graphics/VM.png" alt="VCore" height="42"></th>
+        <th><img src="graphics/VM.png" alt="VCore" height="42"></th>
+      </tr>
+      <tr>
+        <th>{{nVM}}</th>
+        <th>{{nVcore}}</th>
+        <th>{{mem}}</th>
+      </tr>
+    </table>
+  </div>
+
+</div>

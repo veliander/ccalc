@@ -1,0 +1,102 @@
+h2{
+  text-align:center
+}
+div{
+  display:inline-block;
+}
+
+.selected {
+  background-color: #CFD8DC !important;
+  color: white;
+}
+.parameters {
+  margin: 0 0 2em 0;
+  list-style-type: none;
+  padding: 0;
+  width: var(--cwidth)
+}
+
+.parameters div{
+  vertical-align: top;
+}
+
+.parameters li {
+  font-size: small;
+  cursor: pointer;
+  position: relative;
+  left: 0;
+  background-color: #EEE;
+  margin: .5em;
+  padding: .3em 0;
+  height: 2em;
+  border-radius: 4px;
+}
+.parameters li.selected:hover {
+  background-color: #BBD8DC !important;
+  color: white;
+}
+.parameters li:hover {
+  color: #607D8B;
+  background-color: #DDD;
+  left: .1em;
+}
+.parameters .text {
+  margin:auto;
+}
+
+.parameters{
+  --ucre-e-badge: #8b505f;
+  --ucre-o-badge: #006d8b;
+  --cwidth: 19.5em;
+}
+
+.parameters .o-badge {
+  display: inline-block;
+  font-size: small;
+  color: white;
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color: var(--ucre-o-badge);
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  width: 11em;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+.parameters .e-badge {
+  display: inline-block;
+  font-size: small;
+  color: white;
+  padding: 0.8em 0.7em 0 0.7em;
+  background-color: var(--ucre-e-badge);
+  line-height: 1em;
+  position: relative;
+  left: -1px;
+  top: -4px;
+  height: 1.8em;
+  width: 11em;
+  margin-right: .8em;
+  border-radius: 4px 0 0 4px;
+}
+
+input {
+  position: relative;
+  width: 5em;
+  left: -1px;
+  top: -4px;
+  background-color: #f3f3f3;
+  border-radius: 3px;
+}
+.container{
+  display: grid
+}
+
+.restab, th, td{
+  border-collapse:collapse;
+  width: 19.5em;
+  /*
+  border: 1px solid #8b505f;
+  */
+}
