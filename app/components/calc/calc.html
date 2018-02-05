@@ -36,8 +36,11 @@
         <th>{{niProxy}}</th>
       </tr>
     </table>
+
   </div>
+
   <div>
+
     <ul class="parameters">
       <li *ngFor="let parameter of parameters  | SubsystemPipe: ss.givr; let e=even"
           [class.selected]="parameter === selectedParameter"
@@ -59,8 +62,8 @@
     <table class="restab">
       <tr>
         <th>IVR</th>
-        <th>CMS</th>
-        <th>DSA</th>
+        <th>MS</th>
+        <th>DB</th>
       </tr>
       <tr>
         <th><img src="graphics/Tahoe.png" alt="IVR" height="42"></th>
