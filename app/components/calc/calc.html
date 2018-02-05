@@ -36,11 +36,8 @@
         <th>{{niProxy}}</th>
       </tr>
     </table>
-
   </div>
-
   <div>
-
     <ul class="parameters">
       <li *ngFor="let parameter of parameters  | SubsystemPipe: ss.givr; let e=even"
           [class.selected]="parameter === selectedParameter"
